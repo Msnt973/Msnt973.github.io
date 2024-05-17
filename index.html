@@ -5,7 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>Doggo Fetch</title>
+    <title>Pet Fetch</title>
     <style>
         body {
             margin: 1rem auto;
@@ -69,9 +69,12 @@
 
 <body>
     <header>
-        <h1>Guess the Doggo</h1>
+        <h1>Guess the Pet</h1>
         <p>What breed is the dog in this image?</p>
-
+        <div id="pet-choices">
+            <button id="doggo-btn" data-pet="dog">Fetch Doggo</button>
+            <button id="cat-btn" data-pet="cat">Fetch Cat</button>
+        </div>
     </header>
 
     <main>
@@ -87,10 +90,12 @@
 
     <script type="module">
 
-        const RANDOM_IMG_ENDPOINT = "https://dog.ceo/api/breeds/image/random";
+        const DOG_BREEDS = ["affenpinscher", "african", "airedale", "akita", "appenzeller", "shepherd australian", "basenji", "beagle", "bluetick", "borzoi", "bouvier", "boxer", "brabancon", "briard", "norwegian buhund", "boston bulldog", "english bulldog", "french bulldog", "staffordshire bullterrier", "australian cattledog", "chihuahua", "chow", "clumber", "cockapoo", "border collie", "coonhound", "cardigan corgi", "cotondetulear", "dachshund", "dalmatian", "great dane", "scottish deerhound", "dhole", "dingo", "doberman", "norwegian elkhound", "entlebucher", "eskimo", "lapphund finnish", "bichon frise", "germanshepherd", "italian greyhound", "groenendael", "havanese", "afghan hound", "basset hound", "blood hound", "english hound", "ibizan hound", "plott hound", "walker hound", "husky", "keeshond", "kelpie", "komondor", "kuvasz", "labradoodle", "labrador", "leonberg", "lhasa", "malamute", "malinois", "maltese", "bull mastiff", "english mastiff", "tibetan mastiff", "mexicanhairless", "mix", "bernese mountain", "swiss mountain", "newfoundland", "otterhound", "caucasian ovcharka", "papillon", "pekinese", "pembroke", "miniature pinscher", "pitbull", "german pointer", "germanlonghair pointer", "pomeranian", "medium poodle", "miniature poodle", "standard poodle", "toy poodle", "pug", "puggle", "pyrenees", "redbone", "chesapeake retriever", "curly retriever", "flatcoated retriever", "golden retriever", "rhodesian ridgeback", "rottweiler", "saluki", "samoyed", "schipperke", "giant schnauzer", "miniature schnauzer", "english setter", "gordon setter", "irish setter", "sharpei", "english sheepdog", "shetland sheepdog", "shiba", "shihtzu", "blenheim spaniel", "brittany spaniel", "cocker spaniel", "irish spaniel", "japanese spaniel", "sussex spaniel", "welsh spaniel", "english springer", "stbernard", "american terrier", "australian terrier", "bedlington terrier", "border terrier", "cairn terrier", "dandie terrier", "fox terrier", "irish terrier", "kerryblue terrier", "lakeland terrier", "norfolk terrier", "norwich terrier", "patterdale terrier", "russell terrier", "scottish terrier", "sealyham terrier", "silky terrier", "tibetan terrier", "toy terrier", "welsh terrier", "westhighland terrier", "wheaten terrier", "yorkshire terrier", "tervuren", "vizsla", "spanish waterdog", "weimaraner", "whippet", "irish wolfhound"];
 
-        const BREEDS = ["affenpinscher", "african", "airedale", "akita", "appenzeller", "shepherd australian", "basenji", "beagle", "bluetick", "borzoi", "bouvier", "boxer", "brabancon", "briard", "norwegian buhund", "boston bulldog", "english bulldog", "french bulldog", "staffordshire bullterrier", "australian cattledog", "chihuahua", "chow", "clumber", "cockapoo", "border collie", "coonhound", "cardigan corgi", "cotondetulear", "dachshund", "dalmatian", "great dane", "scottish deerhound", "dhole", "dingo", "doberman", "norwegian elkhound", "entlebucher", "eskimo", "lapphund finnish", "bichon frise", "germanshepherd", "italian greyhound", "groenendael", "havanese", "afghan hound", "basset hound", "blood hound", "english hound", "ibizan hound", "plott hound", "walker hound", "husky", "keeshond", "kelpie", "komondor", "kuvasz", "labradoodle", "labrador", "leonberg", "lhasa", "malamute", "malinois", "maltese", "bull mastiff", "english mastiff", "tibetan mastiff", "mexicanhairless", "mix", "bernese mountain", "swiss mountain", "newfoundland", "otterhound", "caucasian ovcharka", "papillon", "pekinese", "pembroke", "miniature pinscher", "pitbull", "german pointer", "germanlonghair pointer", "pomeranian", "medium poodle", "miniature poodle", "standard poodle", "toy poodle", "pug", "puggle", "pyrenees", "redbone", "chesapeake retriever", "curly retriever", "flatcoated retriever", "golden retriever", "rhodesian ridgeback", "rottweiler", "saluki", "samoyed", "schipperke", "giant schnauzer", "miniature schnauzer", "english setter", "gordon setter", "irish setter", "sharpei", "english sheepdog", "shetland sheepdog", "shiba", "shihtzu", "blenheim spaniel", "brittany spaniel", "cocker spaniel", "irish spaniel", "japanese spaniel", "sussex spaniel", "welsh spaniel", "english springer", "stbernard", "american terrier", "australian terrier", "bedlington terrier", "border terrier", "cairn terrier", "dandie terrier", "fox terrier", "irish terrier", "kerryblue terrier", "lakeland terrier", "norfolk terrier", "norwich terrier", "patterdale terrier", "russell terrier", "scottish terrier", "sealyham terrier", "silky terrier", "tibetan terrier", "toy terrier", "welsh terrier", "westhighland terrier", "wheaten terrier", "yorkshire terrier", "tervuren", "vizsla", "spanish waterdog", "weimaraner", "whippet", "irish wolfhound"];
+        const CAT_BREEDS = ["abys", "aege", "abob", "acur", "asho", "awir", "amau", "amis", "bali", "bamb", "beng", "birm", "bomb", "bslo", "bsho", "bure", "buri", "cspa", "ctif", "char", "chau", "chee", "csho", "crex", "cymr", "cypr", "drex", "dons", "lihu", "emau", "ebur", "esho", "hbro", "hima", "jbob", "java", "khao", "kora", "kuri", "lape", "mcoo", "mala", "manx", "munc", "nebe", "norw", "ocic", "orie", "pers", "pixi", "raga", "ragd", "rblu", "sava", "sfol", "srex", "siam", "sibe", "sing", "snow", "soma", "sphy", "tonk", "toyg", "tang", "tvan", "ycho"
+        ]
 
+        const RANDOM_IMG_ENDPOINT_DOG = "https://dog.ceo/api/breeds/image/random"
 
         // Utility function to get a randomly selected item from an array
         function getRandomElement(array) {
@@ -143,11 +148,16 @@
         // Given a URL, fetch the resource at that URL, 
         // then parse the response as a JSON object,
         // finally return the "message" property of its body
-        async function fetchMessage(url) {
-            const response = await fetch(url);
+        async function fetchMessage(endpoint) {
+            const response = await fetch(endpoint);
             const responseJson = await response.json();
             const { message } = responseJson;
-            return message
+            if (message) {
+                return message;
+            } else {
+                const { url } = responseJson[0];
+                return url;
+            }
         }
 
 
@@ -180,6 +190,14 @@
             }
         }
 
+        function removeButtons() {
+            const oldButtons = Array.from(document.querySelectorAll("#options button"));
+            if (oldButtons.length > 0) {
+                for (let btn of oldButtons) {
+                    btn.remove();
+                }
+            }
+        }
 
         // Function to add the quiz content to the page
         function renderQuiz(imgUrl, correctAnswer, choices) {
@@ -196,12 +214,12 @@
         }
 
         // Function to load the data needed to display the quiz
-        async function loadQuizData() {
-            document.getElementById("image-frame").textContent = "Fetching doggo...";
+        async function loadQuizData(randomImgEndpoint, array, pet) {
+            document.getElementById("image-frame").textContent = `Fetching ${pet}...`;
 
-            const doggoImgUrl = await fetchMessage(RANDOM_IMG_ENDPOINT);
-            const correctBreed = getBreedFromURL(doggoImgUrl);
-            const breedChoices = getMultipleChoices(3, correctBreed, BREEDS);
+            const correctBreed = getRandomElement(array);
+            const doggoImgUrl = await fetchMessage(randomImgEndpoint);
+            const breedChoices = getMultipleChoices(3, correctBreed, array);
 
             return [doggoImgUrl, correctBreed, breedChoices];
         }
@@ -209,10 +227,37 @@
         // TODO 5
         // Asynchronously call the loadQuizData() function,
         // Then call renderQuiz() with the returned imageUrl, correctAnswer, and choices 
-        const [imgUrl, correctAnswer, choices] = await loadQuizData()
+
+        const [imgUrl, correctAnswer, choices] = await loadQuizData(RANDOM_IMG_ENDPOINT_DOG, DOG_BREEDS, "dog")
         renderQuiz(imgUrl, correctAnswer, choices);
 
+        //adding pet choice
+        const petChoices = Array.from(document.querySelectorAll("#pet-choices button"));
+        for (let pet of petChoices) {
+            pet.addEventListener("click", await getPet);
+        }
+
+        async function getPet(pet) {
+            const petType = pet.target.dataset.pet;
+            let randomImgEndpoint = ""
+            let array = [];
+
+            if (petType === "dog") {
+                randomImgEndpoint = RANDOM_IMG_ENDPOINT_DOG;
+                array = DOG_BREEDS;
+            } else {
+                const catBreed = getRandomElement(CAT_BREEDS);
+                randomImgEndpoint = `https://api.thecatapi.com/v1/images/search?breed_ids=${catBreed}`;
+                array = CAT_BREEDS;
+            }
+
+            removeButtons();
+            const [imgUrl, correctAnswer, choices] = await loadQuizData(randomImgEndpoint, array, petType);
+            renderQuiz(imgUrl, correctAnswer, choices);
+        }
+
     </script>
+
 
 </body>
 
