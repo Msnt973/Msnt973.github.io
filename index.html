@@ -92,8 +92,7 @@
 
         const DOG_BREEDS = ["affenpinscher", "african", "airedale", "akita", "appenzeller", "shepherd australian", "basenji", "beagle", "bluetick", "borzoi", "bouvier", "boxer", "brabancon", "briard", "norwegian buhund", "boston bulldog", "english bulldog", "french bulldog", "staffordshire bullterrier", "australian cattledog", "chihuahua", "chow", "clumber", "cockapoo", "border collie", "coonhound", "cardigan corgi", "cotondetulear", "dachshund", "dalmatian", "great dane", "scottish deerhound", "dhole", "dingo", "doberman", "norwegian elkhound", "entlebucher", "eskimo", "lapphund finnish", "bichon frise", "germanshepherd", "italian greyhound", "groenendael", "havanese", "afghan hound", "basset hound", "blood hound", "english hound", "ibizan hound", "plott hound", "walker hound", "husky", "keeshond", "kelpie", "komondor", "kuvasz", "labradoodle", "labrador", "leonberg", "lhasa", "malamute", "malinois", "maltese", "bull mastiff", "english mastiff", "tibetan mastiff", "mexicanhairless", "mix", "bernese mountain", "swiss mountain", "newfoundland", "otterhound", "caucasian ovcharka", "papillon", "pekinese", "pembroke", "miniature pinscher", "pitbull", "german pointer", "germanlonghair pointer", "pomeranian", "medium poodle", "miniature poodle", "standard poodle", "toy poodle", "pug", "puggle", "pyrenees", "redbone", "chesapeake retriever", "curly retriever", "flatcoated retriever", "golden retriever", "rhodesian ridgeback", "rottweiler", "saluki", "samoyed", "schipperke", "giant schnauzer", "miniature schnauzer", "english setter", "gordon setter", "irish setter", "sharpei", "english sheepdog", "shetland sheepdog", "shiba", "shihtzu", "blenheim spaniel", "brittany spaniel", "cocker spaniel", "irish spaniel", "japanese spaniel", "sussex spaniel", "welsh spaniel", "english springer", "stbernard", "american terrier", "australian terrier", "bedlington terrier", "border terrier", "cairn terrier", "dandie terrier", "fox terrier", "irish terrier", "kerryblue terrier", "lakeland terrier", "norfolk terrier", "norwich terrier", "patterdale terrier", "russell terrier", "scottish terrier", "sealyham terrier", "silky terrier", "tibetan terrier", "toy terrier", "welsh terrier", "westhighland terrier", "wheaten terrier", "yorkshire terrier", "tervuren", "vizsla", "spanish waterdog", "weimaraner", "whippet", "irish wolfhound"];
 
-        const CAT_BREEDS = ["abys", "aege", "abob", "acur", "asho", "awir", "amau", "amis", "bali", "bamb", "beng", "birm", "bomb", "bslo", "bsho", "bure", "buri", "cspa", "ctif", "char", "chau", "chee", "csho", "crex", "cymr", "cypr", "drex", "dons", "lihu", "emau", "ebur", "esho", "hbro", "hima", "jbob", "java", "khao", "kora", "kuri", "lape", "mcoo", "mala", "manx", "munc", "nebe", "norw", "ocic", "orie", "pers", "pixi", "raga", "ragd", "rblu", "sava", "sfol", "srex", "siam", "sibe", "sing", "snow", "soma", "sphy", "tonk", "toyg", "tang", "tvan", "ycho"
-        ]
+        const CAT_BREEDS = ["Abyssinian", "Aegean", "American Bobtail", "American Curl", "American Shorthair", "American Wirehair", "Arabian Mau", "Australian Mist", "Balinese", "Bambino", "Bengal", "Birman", "Bombay", "British Longhair", "British Shorthair", "Burmese", "Burmilla", "California Spangled", "Chantilly-Tiffany", "Chartreux", "Chausie", "Cheetoh", "Colorpoint Shorthair", "Cornish Rex", "Cymric", "Cyprus", "Devon Rex", "Donskoy", "Dragon Li", "Egyptian Mau", "European Burmese", "Exotic Shorthair", "Havana Brown", "Himalayan", "Japanese Bobtail", "Javanese", "Khao Manee", "Korat", "Kurilian", "LaPerm", "Maine Coon", "Malayan", "Manx", "Munchkin", "Nebelung", "Norwegian Forest Cat", "Ocicat", "Oriental", "Persian", "Pixie-bob", "Ragamuffin", "Ragdoll", "Russian Blue", "Savannah", "Scottish Fold", "Selkirk Rex", "Siamese", "Siberian", "Singapura", "Snowshoe", "Somali", "Sphynx", "Tonkinese", "Toyger", "Turkish Angora", "Turkish Van", "York Chocolate"];
 
         const RANDOM_IMG_ENDPOINT_DOG = "https://dog.ceo/api/breeds/image/random"
 
@@ -101,6 +100,16 @@
         function getRandomElement(array) {
             const i = Math.floor(Math.random() * array.length);
             return array[i];
+        }
+
+        function getCatBreed(array) {
+            const catBreed = getRandomElement(CAT_BREEDS);
+            const splitedCatBreed = catBreed.split(" ")
+            if (splitedCatBreed > 1) {
+                const formattedCatBreed = splitedCatBreed[0] + "-" + splitedCatBreed[1]
+                return formattedCatBreed;
+            }
+            return catBreed;
         }
 
         // Utility function to shuffle the order of items in an array in-place
@@ -134,13 +143,21 @@
         // TODO 2
         // Given a URL such as "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg"
         // return the breed name string as formatted in the breed list, e.g. "standard poodle"
-        function getBreedFromURL(url) {
+        function getDogBreedFromURL(url) {
             // The string method .split(char) may come in handy
             // Try to use destructuring as much as you can
             let breed = url.split("/")[4];
             let splitBreed = breed.split("-");
             return splitBreed.length === 1 ? breed : splitBreed[1] + " " + splitBreed[0];
         }
+
+        function getCatBreedFromURL(url) {
+            // The string method .split(char) may come in handy
+            // Try to use destructuring as much as you can
+            let breed = url.split("=")[1];
+            return breed;
+        }
+
 
 
 
@@ -217,8 +234,13 @@
         async function loadQuizData(randomImgEndpoint, array, pet) {
             document.getElementById("image-frame").textContent = `Fetching ${pet}...`;
 
-            const correctBreed = getRandomElement(array);
             const doggoImgUrl = await fetchMessage(randomImgEndpoint);
+            let correctBreed
+            if (pet === "dog") {
+                correctBreed = getDogBreedFromURL(doggoImgUrl);
+            } else {
+                correctBreed = getCatBreedFromURL(randomImgEndpoint);
+            }
             const breedChoices = getMultipleChoices(3, correctBreed, array);
 
             return [doggoImgUrl, correctBreed, breedChoices];
@@ -246,14 +268,25 @@
                 randomImgEndpoint = RANDOM_IMG_ENDPOINT_DOG;
                 array = DOG_BREEDS;
             } else {
-                const catBreed = getRandomElement(CAT_BREEDS);
-                randomImgEndpoint = `https://api.thecatapi.com/v1/images/search?breed_ids=${catBreed}`;
+                const catBreed = getCatBreed(CAT_BREEDS);
+                randomImgEndpoint = `https://api.thecatapi.com/v1/images/search?breed_names=${catBreed}`;
                 array = CAT_BREEDS;
             }
 
             removeButtons();
             const [imgUrl, correctAnswer, choices] = await loadQuizData(randomImgEndpoint, array, petType);
             renderQuiz(imgUrl, correctAnswer, choices);
+        }
+
+        const catNames = []
+
+        async function getCatNames(url) {
+            const response = await fetch(url);
+            const responseJson = await response.json();
+            for (let cat of responseJson) {
+                catNames.push(cat.name)
+            }
+            return catNames;
         }
 
     </script>
